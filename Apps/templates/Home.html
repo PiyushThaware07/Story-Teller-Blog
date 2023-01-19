@@ -9,18 +9,30 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
-		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
-		<!-- Google Font -->
-		<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700" rel="stylesheet">
-		<!-- Font Awesome Icons -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<!-- Main CSS -->
-		<link href="{% static 'css/main.css' %}" rel="stylesheet"/>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+		name='viewport' />
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700"
+		rel="stylesheet">
+	<!-- Font Awesome Icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+		integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<!-- Main CSS -->
+	<link href="{% static 'css/main.css' %}" rel="stylesheet" />
 
 	<style>
 		@media only screen and (max-width:988px) {
 			#navbarColor02 {
-				{% comment %} background-color: rgba(0, 0, 0, 0.61); {% endcomment %}
+					{
+					% comment %
+				}
+
+				background-color: rgba(0, 0, 0, 0.61);
+
+					{
+					% endcomment %
+				}
+
 				background-color:black;
 				padding: 10px;
 			}
@@ -161,7 +173,8 @@ NAVBAR
 				</ul>
 
 				{% if user.is_authenticated %}
-				<a href="{% url 'signout' %}"><button class="btn btn-danger ms-3" onclick="checkLogout()">Logout</button></a>
+				<a href="{% url 'signout' %}"><button class="btn btn-danger ms-3"
+						onclick="checkLogout()">Logout</button></a>
 				{% else %}
 				<!-- ===============================================================================
 					Create Account Model 
@@ -339,7 +352,8 @@ NAVBAR
 						<div class="mb-3 d-flex justify-content-between">
 							<div class="pr-3">
 								<h2 class="mb-1 h4 font-weight-bold">
-									<a class="text-dark" href="post/{{post.post_id}}">{{post.title|truncatechars:80}}</a>
+									<a class="text-dark"
+										href="post/{{post.post_id}}">{{post.title|truncatechars:80}}</a>
 								</h2>
 								<p>{{post.content|truncatechars:100}}</p>
 								<small class="text-muted">Publish Date : {{post.date_timeStamp}}</small>
@@ -350,8 +364,8 @@ NAVBAR
 								<!-- =======================
 								SAVE ARTICLE
 								======================== -->
-								
-										
+
+
 							</div>
 							<img height="120" src="{{post.thumbnail}}">
 						</div>
@@ -386,8 +400,9 @@ NAVBAR
 						href="https://www.facebook.com/piyush.thaware.351/"><i class="fab fa-facebook-f"></i></a>
 					<a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
 						href="https://www.instagram.com/piyushthaware07/"><i class="fab fa-instagram"></i></a>
-					<a href="https://www.linkedin.com/in/piyush-thaware/" class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
-					><i class="fab fa-linkedin-in"></i></a>
+					<a href="https://www.linkedin.com/in/piyush-thaware/"
+						class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"><i
+							class="fab fa-linkedin-in"></i></a>
 					<a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
 						href="https://www.sahil8thaware@gmail.com"><i class="fa fa-envelope"></i></a>
 				</div>
@@ -399,6 +414,8 @@ NAVBAR
 					{% for category in allCategory %}
 					<a href="/category/{{category.Category_id}}"
 						class="btn btn-sm btn-outline-secondary m-1">{{category.name}}</a>
+					{% empty %}
+						<h1 class="placeholder  bg-danger text-white p-2">No Category</h1>
 					{% endfor %}
 
 				</div>
@@ -491,9 +508,8 @@ NAVBAR
 	{% endif %}
 
 	<script>
-		function checkLogout()
-		{
-		confirm("Are you sure you want to logout ??")
+		function checkLogout() {
+			confirm("Are you sure you want to logout ??")
 		}
 	</script>
 </body>
