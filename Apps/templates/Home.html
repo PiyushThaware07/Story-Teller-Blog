@@ -337,35 +337,29 @@ NAVBAR
 			<div class="col-md-12">
 				<h5 class="font-weight-bold spanborder"><span>Latest Stories</span></h5>
 				<div class="row">
-					{% for post in recentPosts %}
-					{% if forloop.counter < 5 %} <div class="col-md-6 border p-5">
-						<div class="mb-3 d-flex justify-content-between">
-							<div class="pr-3">
-								<h2 class="mb-1 h4 font-weight-bold">
-									<a class="text-dark"
-										href="post/{{post.post_id}}">{{post.title|truncatechars:80}}</a>
-								</h2>
-								<p>{{post.content|truncatechars:100}}</p>
-								<small class="text-muted">Publish Date : {{post.date_timeStamp}}</small>
-								<br>
-								<a href="post/{{post.post_id}}"><button class="btn btn-sm btn-primary my-3">Read
-										Article</button></a>
-
-								<!-- =======================
-								SAVE ARTICLE
-								======================== -->
-
-
+					{% for i in allPosts %}
+					{% if forloop.counter < 6 %}
+					<div class="col-md-4 my-3">
+						<div class="card">
+							<a href="post/{{i.post_id}}"><img src="{{i.thumbnail}}" class="card-img-top" alt="Not found"
+									height="180"></a>
+							<div class="card-body">
+								<h5 class="mb-1 h4 font-weight-bold">
+									<a class="text-dark" href="/post/{{i.post_id}}">{{i.title|truncatechars:24}}</a>
+								</h5>
+								<p class="card-text">{{i.content|truncatechars:80}}</p>
+								<a href="post/{{i.post_id}}" class="btn btn-sm btn-outline-secondary m-1" id="read">Read
+									More</a>
 							</div>
-							<img height="120" src="{{post.thumbnail}}">
 						</div>
+					</div>
+					{% endif %}
+					{% empty %}
+						<div class="container d-flex justify-content-center p-5">
+							<h3 class="placeholder  bg-danger text-white p-5">Sorry no post</h3>
+						</div>
+					{% endfor %}
 				</div>
-				{% endif %}
-				{% empty %}
-				<div class="container d-flex justify-content-center p-5">
-					<h3 class="placeholder  bg-danger text-white p-5">Sorry no post</h3>
-				</div>
-				{% endfor %}
 			</div>
 		</div>
 	</div>
