@@ -1,0 +1,201 @@
+{% extends 'Home.html' %}
+
+{% load static %}
+{% load extras %}
+
+{% block title %}Post{% endblock title %}
+
+{% block content %}
+
+<!-- ------------------------------------
+HEADER
+------------------------------------- -->
+<div class="container">
+	<div class="jumbotron jumbotron-fluid mb-3 pl-0 pt-0 pb-0 bg-white position-relative">
+		<div class="h-100 tofront">
+			<div class="row justify-content-between">
+				<div class="col-md-6 pt-6 pb-6 pr-6 align-self-center">
+					<p class="text-uppercase font-weight-bold">
+						<a class="text-danger" href="#">{{post.category}}</a>
+					</p>
+					<h1 class="display-4 secondfont mb-3 font-weight-bold">{{post.title}}</h1>
+					<p class="mb-3">
+						{{post.content}}
+					</p>
+					<div class="d-flex align-items-center">
+						<img class="rounded-circle" src="/media/{{post.profile}}" style="height:50px;width:50px;">
+						<small class="ml-2">{{post.user}}<span class="text-muted d-block">Publish Date :
+								{{post.date_timeStamp}}</span>
+						</small>
+					</div>
+				</div>
+				<div class="col-md-6 pr-0"
+					style="background: url('{{post.thumbnail}}') no-repeat center;background-size: cover;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Header -->
+
+
+
+
+
+
+
+
+<div class="container pt-4 pb-4">
+	<h5 class="font-weight-bold spanborder"><span>Read next</span></h5>
+	<div class="row">
+		{% for i in generate_more_post %}
+		{% if forloop.counter < 2 %} <div class="col-lg-6">
+			<div class="card border-0 mb-4 box-shadow h-xl-400">
+				<div style="background: url('{{i.thumbnail}}') no-repeat center;background-size: cover;height: 300px;">
+				</div>
+				<div class="card-body px-0 pb-0 d-flex flex-column align-items-start">
+					<h2 class="h4 font-weight-bold">
+						<a class="text-dark" href="{{i.post_id}}">{{i.title}}</a>
+					</h2>
+					<p class="card-text">
+						{{i.content|truncatechars:300}}
+					</p>
+					<div>
+						<small class="d-block"><a class="text-muted" href="">Author</a></small>
+						<small class="text-muted">Publish Date : {{i.date_timeStamp}}</small>
+						<br>
+						<a href="{{i.post_id}}"><button class="btn btn-sm btn-primary my-2">Read
+								Article</button></a>
+					</div>
+				</div>
+			</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+
+	<div class="col-lg-6">
+		<div class="col-md-12 mb-4">
+			<form class="d-flex" role="search" method="get" action="{% url 'search' %}">
+				{% csrf_token %}
+				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+				<button class="btn btn-danger" type="submit">Search</button>
+			</form>
+		</div>
+		<div class="flex-md-row mb-4 box-shadow h-xl-300">
+			{% for i in allPosts %}
+			{% if forloop.counter < 3 %} <div class="mb-3 d-flex align-items-center border p-5">
+				<img height="80" width="120" src="{{i.thumbnail}}">
+				<div class="pl-3">
+					<h2 class="mb-2 h6 font-weight-bold">
+						<a class="text-dark" href="{{i.post_id}}">{{i.title}}</a>
+					</h2>
+					<div class="card-text text-muted small">
+						{{i.content|truncatechars:100}}
+					</div>
+					<small class="text-muted">Publish Date : {{i.date_timeStamp}}</small>
+					<br>
+					<a href="{{i.post_id}}"><button class="btn btn-sm btn-primary my-3">Read
+							Article</button></a>
+				</div>
+		</div>
+		{% endif %}
+		{% endfor %}
+	</div>
+</div>
+<!-- End Main -->
+
+
+
+<!-- ============================================================
+COMMENT SECTION
+=============================================================== -->
+<section>
+    <div class="container p-md-5 my-5">
+        <div class="card p-3 border border-2 border-primary">
+            <div class="card-body">
+                <div class="card-title">
+                    <b>Comment ({{comments.count}})</b>
+                </div>
+                <form action="/comment" method="post">
+                    {% csrf_token %}
+                    <!--getting post id-->
+                    <input type="hidden" value="{{post.post_id}}" name="postID">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                            style="height: 200px" name="commentMSG" required></textarea>
+                        <label for="floatingTextarea2">Leave Comment Here...</label>
+                        <input type="hidden" name="parentSno" value="">
+                    </div>
+                    <button class="btn btn-sm btn-primary mt-3" type="submit">submit</button>
+                </form>
+
+
+                {% for comment in comments %}
+                <section>
+                    <!--commented-->
+                    <div class="col-md-12 bg-dark text-white my-3" style="border-radius:10px;">
+                        <div class="d-flex align-items-center p-3">
+                            <img class="rounded-circle" src="{{post.thumbnail}}" style="height:50px;width:50px;">
+                            <div class="col-md-8 ms-5">
+                                <small class="ml-2"><b>{{comment.user.first_name}} {{comment.user.last_name}}</b>
+                                    <span class="text-white d-block">{{comment.comment_message}}</span>
+                                    <span class="text-muted d-block">{{comment.comment_date_time}}</span>
+
+
+
+                                    <!--reply-->
+                                    <p>
+                                        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#replyBox{{comment.comment_id}}" aria-expanded="false"
+                                            aria-controls="replyBox{{comment.comment_id}}">
+                                            reply
+                                        </button>
+                                    </p>
+                                    <div class="collapse" id="replyBox{{comment.comment_id}}">
+                                        <div class="card card-body text-muted">
+                                            <form action="/comment" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" value="{{post.post_id}}" name="postID">
+                                                <div class="form-floating">
+                                                    <textarea class="form-control" placeholder="Leave a comment here"
+                                                        id="floatingTextarea2" style="height: 100px" name="commentMSG"
+                                                        required></textarea>
+                                                    <label for="floatingTextarea2">Leave reply Here...</label>
+
+                                                    <input type="hidden" name="parentSno"
+                                                        value="{{comment.comment_id}}">
+                                                </div>
+                                                <button class="btn btn-sm btn-primary mt-3"
+                                                    type="submit">submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+
+
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--reply-->
+                    {% for reply in replyDict|get_val:comment.comment_id %}<!--get_val reply templtes filter-->
+                    <div class="col-10 col-md-10 bg-primary text-white ms-auto my-3" style="border-radius:10px;">
+                        <div class="d-flex align-items-center p-3">
+                            <img class="rounded-circle" src="{{post.thumbnail}}" style="height:50px;width:50px;">
+                            <div class="col-md-8 ms-md-5">
+                            <small class="ml-2"><b>{{reply.user.first_name}} {{reply.user.last_name}}</b> 
+                                <span class="text-white d-block">{{reply.comment_message}}</span>
+                                <span class="text-black d-block">{{reply.comment_date_time}}</span>
+                            </small>
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,501 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}Home{% endblock title %}</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+		<!-- Google Font -->
+		<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700" rel="stylesheet">
+		<!-- Font Awesome Icons -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<!-- Main CSS -->
+		<link href="{% static 'css/main.css' %}" rel="stylesheet"/>
+
+	<style>
+		@media only screen and (max-width:988px) {
+			#navbarColor02 {
+				{% comment %} background-color: rgba(0, 0, 0, 0.61); {% endcomment %}
+				background-color:black;
+				padding: 10px;
+			}
+
+			#navbarColor02>ul {
+				text-align: center;
+			}
+
+			#navbarColor02>ul>li {
+				width: 100%;
+				padding: 5px;
+			}
+
+			#navbarColor02>ul>li>a {
+				color: white;
+			}
+
+			#create>li:nth-child(n)>a {
+				text-align: left;
+			}
+
+			#create>li:nth-child(4)>button {
+				display: inherit;
+			}
+		}
+
+		body>div.modal-backdrop.fade.show {
+			position: relative;
+		}
+
+		#staticBackdrop1,
+		#staticBackdrop,
+		#staticBackdrop3 {
+			background: rgba(0, 0, 0, 0.642);
+		}
+	</style>
+
+
+	<script>
+		function checkpassword() {
+			if (document.signup.password1.value != document.signup.password2.value) {
+				alert("Password doesn't matches");
+				document.signup.password1.focus();
+				return false;
+			}
+			return true;
+		}
+
+		function checkpasswordSignin() {
+			if (document.signin.password1.value != document.signin.password2.value) {
+				alert("Password doesn't matches");
+				document.signin.password1.focus();
+				return false;
+			}
+			return true;
+		}
+	</script>
+</head>
+
+<body>
+	<!-- -----------------------------
+NAVBAR
+---------------------------------->
+	<nav class="topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="{% url 'home' %}"><strong><span class="text-success">Story</span>
+					Teller</strong></a>
+			<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+				aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="navbar-collapse collapse" id="navbarColor02" style="">
+				<ul class="navbar-nav mr-auto d-flex align-items-center" id="create">
+					<li class="nav-item">
+						<a class="nav-link {% if request.path == '/' %}text-success font-weight-bold{% endif %}"
+							href="{% url 'home' %}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {% if request.path == '/about' %}text-success font-weight-bold{% endif %}"
+							href="{% url 'about' %}">About Us</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {% if request.path == '/blog' %}text-success font-weight-bold{% endif %}"
+							href="{% url 'blog' %}">Blogs</a>
+					</li>
+
+
+					<!-- --------------------------------------- 
+                    	Contact Us
+                    --------------------------------------- -->
+					<li class="nav-item mb-3 mb-md-0">
+						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+							data-bs-target="#staticBackdrop3">
+							Contact Us
+						</button>
+						<div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false"
+							tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5 font-weight-bold" id="staticBackdropLabel">Contact
+											Us</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="Close"></button>
+									</div>
+									<form action="{% url 'contact' %}" method="post">
+										<div class="modal-body">
+
+											{% csrf_token %}
+											<div class="form-floating mb-3">
+												<input name="name" type="text" class="form-control" id="floatingName"
+													placeholder="Name" required>
+												<label for="floatingName">Name</label>
+											</div>
+											<div class="form-floating mb-3">
+												<input name="email" type="email" class="form-control" id="floatingEmail"
+													placeholder="name@example.com" required>
+												<label for="floatingEmail">Email address</label>
+											</div>
+											<div class="form-floating mb-3">
+												<textarea name="message" id="floatingMessage" class="form-control"
+													placeholder="Message" style="height: 200px;" required></textarea>
+												<label for="floatingMessage">Message</label>
+											</div>
+
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-dark"
+												data-bs-dismiss="modal">Close</button>
+											<a href=""><button type="submit" class="btn btn-success">Submit</button></a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</li>
+
+				</ul>
+
+				{% if user.is_authenticated %}
+				<a href="{% url 'signout' %}"><button class="btn btn-danger ms-3" onclick="checkLogout()">Logout</button></a>
+				{% else %}
+				<!-- ===============================================================================
+					Create Account Model 
+				================================================================================== -->
+				<button type="button" class="btn btn-secondary ms-5 ms-md-0 my-4" data-bs-toggle="modal"
+					data-bs-target="#staticBackdrop1">
+					Create Account
+				</button>
+				<div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
+					tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5 font-weight-bold" id="staticBackdropLabel">Create
+									Account</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<form action="{% url 'signup' %}" method="post" name="signup"
+								onsubmit="return checkpassword()">
+								{% csrf_token %}
+								<div class="modal-body">
+									<div class="form-floating mb-3">
+										<input type="text" class="form-control" id="floatingfname"
+											placeholder="First Name" name="fname" required>
+										<label for="floatingfname" class="text-dark">First Name</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input type="text" class="form-control" id="floatinglname"
+											placeholder="Last Name" name="lname" required>
+										<label for="floatinglname">Last Name</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input type="email" class="form-control" id="floatingemail"
+											placeholder="Email Address" name="email" required>
+										<label for="floatingemail">Email Address</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input type="password" class="form-control" id="floatingPassword"
+											placeholder="Password" name="password1" required>
+										<label for="floatingPassword">Password</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input type="password" class="form-control" id="floatingConfirmPassword"
+											placeholder="Confirm Password" name="password2" required>
+										<label for="floatingConfirmPassword">Confirm Password</label>
+									</div>
+
+								</div>
+								<div class="modal-footer">
+									<!-- ================================================================================================== -->
+									<!-- Login Account -->
+									<button type="button" class="btn btn-danger" data-bs-toggle="modal"
+										data-bs-target="#staticBackdrop"
+										style="position: absolute;bottom: 20px;left: 20px;">
+										Login Account
+									</button>
+
+
+									<!-- ================================================================================================== -->
+									<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+									<a href=""><button type="submit" class="btn btn-success">Submit</button></a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- ===============================================================================
+					Login Account Model 
+				================================================================================== -->
+				<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+					tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5 font-weight-bold" id="staticBackdropLabel">Login
+									Account
+								</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<form action="{% url 'signin' %}" method="post" name="signin"
+								onsubmit="return checkpasswordSignin()">
+								{% csrf_token %}
+								<div class="modal-body">
+									<div class="form-floating mb-3">
+										<input type="email" class="form-control" id="floatingemail"
+											placeholder="Email Address" name="email" required>
+										<label for="floatingemail">Email Address</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input type="password" class="form-control" id="floatingPassword"
+											placeholder="Password" name="password1" required>
+										<label for="floatingPassword">Password</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input type="password" class="form-control" id="floatingConfirmPassword"
+											placeholder="Confirm Password" name="password2" required>
+										<label for="floatingConfirmPassword">Confirm Password</label>
+									</div>
+
+								</div>
+								<div class="modal-footer">
+									<!-- ================================================================================================== -->
+
+									<!-- Create Account -->
+									<button type="button" class="btn btn-danger ms-3" data-bs-toggle="modal"
+										data-bs-target="#staticBackdrop1"
+										style="position: absolute;bottom: 20px;left: 10px;">
+										Create Account
+									</button>
+
+
+									<!-- ================================================================================================== -->
+									<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+									<a href=""><button type="submit" class="btn btn-success">Submit</button></a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				{% endif %}
+
+			</div>
+		</div>
+	</nav>
+	<!-- End Navbar -->
+
+	{% block content %}
+	<!-- -----------------------------
+	HEADER
+	---------------------------------->
+	<div class="container">
+		<div class="jumbotron jumbotron-fluid mb-3 pt-0 pb-0 bg-lightblue position-relative">
+			<div class="pl-4 pr-0 h-100 tofront">
+				<div class="row justify-content-between">
+					<div class="col-md-6 pt-6 pb-6 align-self-center">
+						<h1 class="secondfont mb-3 font-weight-bold">Publish <br> your passions your way</h1>
+						<p class="mb-3">
+							Whether you'd like to share your knowledge, experiences or the latest news, create a unique
+							and beautiful blog
+						</p>
+						{% if user.is_authenticated %}
+						<a class="nav-link" href="{% url 'upload' %}"><button class="btn btn-dark">Upload Blog <i
+									class="fa fa-upload" aria-hidden="true"></i></button></a>
+						{% else %}
+						<button type="button" class="btn btn-dark" data-bs-toggle="modal"
+							data-bs-target="#staticBackdrop1">
+							Create Blog
+						</button>
+						{% endif %}
+					</div>
+					<div class="col-md-6 d-none d-md-block pr-0"
+						style="background-size:cover;background-image:url('{% static 'img/Banner3.jpg' %}');background-position:center;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Header -->
+
+	<!-- -----------------------------
+	MAIN
+	---------------------------------->
+
+	<div class="container mt-4">
+		<div class="row justify-content-between">
+			<div class="col-md-12">
+				<h5 class="font-weight-bold spanborder"><span>Latest Stories</span></h5>
+				<div class="row">
+					{% for post in recentPosts %}
+					{% if forloop.counter < 5 %} <div class="col-md-6 border p-5">
+						<div class="mb-3 d-flex justify-content-between">
+							<div class="pr-3">
+								<h2 class="mb-1 h4 font-weight-bold">
+									<a class="text-dark" href="post/{{post.post_id}}">{{post.title|truncatechars:80}}</a>
+								</h2>
+								<p>{{post.content|truncatechars:100}}</p>
+								<small class="text-muted">Publish Date : {{post.date_timeStamp}}</small>
+								<br>
+								<a href="post/{{post.post_id}}"><button class="btn btn-sm btn-primary my-3">Read
+										Article</button></a>
+
+								<!-- =======================
+								SAVE ARTICLE
+								======================== -->
+								
+										
+							</div>
+							<img height="120" src="{{post.thumbnail}}">
+						</div>
+				</div>
+				{% endif %}
+				{% empty %}
+				<div class="container d-flex justify-content-center p-5">
+					<h1 class="placeholder  bg-danger text-white p-5">Sorry no post</h1>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	</div>
+
+
+	{% endblock content %}
+
+	<!-- -----------------------------
+	FOOTER
+	---------------------------------->
+	<div class="container-fluid bg-light pt-5 px-sm-3 px-md-5">
+		<div class="row">
+			<div class="col-lg-4 col-md-6 mb-5">
+				<a href="/" class="navbar-brand">
+					<h1 class="mb-2 mt-n2 display-5 text-uppercase"><span class="text-primary">Story</span>Teller</h1>
+				</a>
+				<p>Publish your passions your way.Whether you'd like to share your knowledge, experiences or the latest
+					news, create a unique and beautiful blog</p>
+				<div class="d-flex justify-content-start mt-4">
+					<a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
+						href="https://www.facebook.com/piyush.thaware.351/"><i class="fab fa-facebook-f"></i></a>
+					<a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
+						href="https://www.instagram.com/piyushthaware07/"><i class="fab fa-instagram"></i></a>
+					<a href="https://www.linkedin.com/in/piyush-thaware/" class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
+					><i class="fab fa-linkedin-in"></i></a>
+					<a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;"
+						href="https://www.sahil8thaware@gmail.com"><i class="fa fa-envelope"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 mb-5">
+				<h4 class="font-weight-bold mb-4">Categories</h4>
+				<div class="d-flex flex-wrap m-n1">
+
+					{% for category in allCategory %}
+					<a href="/category/{{category.Category_id}}"
+						class="btn btn-sm btn-outline-secondary m-1">{{category.name}}</a>
+					{% endfor %}
+
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 mb-5">
+				<h4 class="font-weight-bold mb-4">Quick Links</h4>
+				<div class="d-flex flex-column justify-content-start">
+					<a class="text-secondary mb-2" href="{% url 'about' %}"><i
+							class="fa fa-angle-right text-dark mr-2"></i>About</a>
+					<a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right text-dark mr-2"></i>Privacy &
+						policy</a>
+					<a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right text-dark mr-2"></i>Terms &
+						conditions</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid py-4 px-sm-3 px-md-5">
+		<div class="row align-items-center justify-content-between">
+			<div>
+				<span class="navbar-brand mr-2"><strong>Story Teller</strong></span> Copyright &copy;
+				<script>document.write(new Date().getFullYear())</script>
+				. All rights reserved.
+			</div>
+		</div>
+	</div>
+
+	<!-- -----------------------------
+	JAVASCRIPTS
+	---------------------------------->
+	<script src="{% static 'js/vendor/jquery.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/vendor/popper.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/vendor/bootstrap.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/functions.js' %}" type="text/javascript"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+
+
+
+	<!-- ------------------------------
+	JS CHECK PURPOSE
+	--------------------------------- -->
+	<!-- Contact-->
+	{% if contact_message == 'yes' %}
+	<script>
+		alert('Thanks for contacting us,we will get back to you soon');
+		window.location = ('{% url 'home' %}'); 
+	</script>
+	{% endif %}
+	{% if contact_message == 'no' %}
+	<script>
+		alert('Something Went Wrong,Try Again ...');
+	</script>
+	{% endif %}
+
+	<!--Create Account-->
+	{% if create_account == 'yes' %}
+	<script>
+		alert('Account Created successfully');
+		window.location = ('{% url 'home' %}'); 
+	</script>
+	{% endif %}
+	{% if create_account == 'no' %}
+	<script>
+		alert('Something Went Wrong,Try Again ...');
+	</script>
+	{% endif %}
+
+
+	<!--Login-->
+	{% if login_message == 'yes' %}
+	<script>
+		alert('Login successfully');
+		window.location = ('{% url 'home' %}'); 
+	</script>
+	{% endif %}
+	{% if login_message == 'no' %}
+	<script>
+		alert('Something Went Wrong,Try Again ...');
+	</script>
+	{% endif %}
+
+	<!--Logout-->
+	{% if logout_message == 'yes' %}
+	<script>
+		alert('Logout successfully');
+		window.location = ('{% url 'home' %}'); 
+	</script>
+	{% endif %}
+
+	<script>
+		function checkLogout()
+		{
+		confirm("Are you sure you want to logout ??")
+		}
+	</script>
+</body>
+
+</html>

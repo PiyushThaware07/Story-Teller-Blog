@@ -1,0 +1,71 @@
+{% extends 'Home.html' %}
+
+{% block title %}Upload{% endblock title %}
+
+{% block content %}
+<div class="container p-5 bg-dark text-white">
+    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="title">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Content</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="8" name="content"></textarea>
+                </div>
+                <div class="row">
+                    <label for="">Category</label>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <select class="form-select" name="category">
+                                <option selected>None</option>
+                                {% for i in allCategory %}
+                                <option value="{{i.name}}">{{i.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" placeholder="Add Category" class="form-control" name="AddCategory">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="">Feature Image</label>
+                    <input type="file" name="myfile" class="form-control p-5">
+                </div>
+                <div class="mb-3">
+                    <label for="">Publish Date</label>
+                    <input type="date" name="date" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-danger">Submit</button>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+
+
+<!-- ------------------------------
+	JS CHECK PURPOSE
+	--------------------------------- -->
+
+<!-- Upload-->
+{% if upload_message == 'yes' %}
+<script>
+    alert('Blog uploaded successfully');
+    window.location = ('{% url 'blog' %}'); 
+</script>
+{% endif %}
+{% if upload_message == 'no' %}
+<script>
+    alert('Something Went Wrong,Try Again ...');
+</script>
+{% endif %}
+{% endblock content %}

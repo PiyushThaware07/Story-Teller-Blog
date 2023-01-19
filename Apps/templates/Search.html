@@ -1,0 +1,89 @@
+{% extends 'Home.html' %}
+{% load static %}
+{% block title %}Search Result{% endblock title %}
+
+{% block content %}
+<link href="{% static 'css/blog.css' %}" rel="stylesheet">
+<link href="{% static 'css/main.css' %}" rel="stylesheet" />
+
+<style>
+    #read:hover {
+        color: white;
+    }
+</style>
+<div class="container-fluid">
+    <div class="container">
+        <div class="section-title mt-4">
+            <div class="row">
+                <div class="col-md-8 me-auto">
+                    <h2><span>Search Result</span> : <span class="font-weight-light h5">{{search_item|truncatechars:70}}</span> </h2>
+                </div>
+                <div class="col-md-4">
+                    <form class="d-flex" role="search" method="get" action="{% url 'search' %}">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                        <button class="btn btn-danger" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% if allPosts %}
+            {% for i in allPosts %}
+            <div class="col-md-4 my-3">
+                <div class="card">
+                    <a href="post/{{i.post_id}}"><img src="{{i.thumbnail}}" class="card-img-top" alt="Not found"
+                            height="180"></a>
+                    <div class="card-body">
+                        <h5 class="mb-1 h4 font-weight-bold">
+                            <a class="text-dark" href="/post/{{i.post_id}}">{{i.title|truncatechars:24}}</a>
+                        </h5>
+                        <p class="card-text">{{i.content|truncatechars:80}}</p>
+                        <a href="post/{{i.post_id}}" class="btn btn-sm btn-outline-secondary m-1" id="read">Read
+                            More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="container d-flex justify-content-center p-5">
+                <div class="row d-block">
+                    <div class="placeholder  bg-danger text-white p-5">
+                        <h2>Sorry no post available please try to search with anyother keyword</h2>
+                        <br>
+                        <h5>Suggestions:</h5>
+                        <ul>
+                            <li>Make sure that all words are spelled correctly.</li>
+                            <li>Try different keywords.</li>
+                            <li>Try more general keywords.</li>
+                            <li>Try fewer keywords.</li>
+                        </ul>
+                    </div>
+                </div>
+			</div>
+            {% endif %}
+        </div>
+
+        <!-- ---------------------------------------
+        PAGINATION
+    ------------------------------------------ -->
+        <div class="col-md-6">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination mt-3 ">
+                    {% if allPosts.has_previous %}
+                    <li class="page-item active"><a class="page-link"
+                            href="?page={{allPosts.previous_page_number}}">Previous</a></li>
+                    {% endif %}
+                    {% for p in totalPageList %}
+                    <li class="page-item"><a class="page-link" href="?page={{p}}">{{forloop.counter}}</a></li>
+                    {% endfor %}
+                    {% if allPosts.has_next %}
+                    <li class="page-item active"><a class="page-link"
+                            href="?page={{allPosts.next_page_number}}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock content %}
